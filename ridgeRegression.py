@@ -14,3 +14,22 @@ def loadDataSet(dataFile):
 	# pl.legend('Y',loc=2)
 	# pl.show()
 	return (xVal,yVal)
+
+
+def normalEquations(x,y,theta):
+	y1 = np.array(y)
+
+	x1 = np.array(x) 
+	x2 = np.array(x.transpose())
+
+	z = np.dot(x1,x2)
+	z = np.linalg.inv(z)
+
+	v = np.ones(2)
+	v[0] = np.dot(x1[0,:],y1)
+	v[1] = np.dot(x1[1,:],y1)
+
+	theta[0] = np.dot(z[:,0],v)
+	theta[1] = np.dot(z[:,1],v)
+
+	return theta
