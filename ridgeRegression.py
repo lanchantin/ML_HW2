@@ -18,6 +18,7 @@ def loadDataSet(dataFile):
 
 def normalEquations(x,y,theta):
 	y1 = np.array(y)
+	lambda = 0.2
 
 	x1 = np.array(x) 
 	x2 = np.array(x.transpose())
