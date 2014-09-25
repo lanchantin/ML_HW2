@@ -5,45 +5,59 @@ import matplotlib.pyplot as pl
 
 
 def loadDataSet(dataFile):
-	xVal = np.asmatrix(np.loadtxt(dataFile, delimiter = " ", usecols=(0,1),unpack=True)).transpose()
-	yVal = np.asmatrix(np.loadtxt(dataFile, delimiter = " ", usecols=(2,),unpack=True)).transpose()
+	xval = np.asmatrix(np.loadtxt(dataFile, delimiter = " ", usecols=(0,1,2),unpack=True)).transpose()
+	yval = np.asmatrix(np.loadtxt(dataFile, delimiter = " ", usecols=(3,),unpack=True)).transpose()
 
-	return (xVal,yVal)
+	return (xval,yval)
 
 
 def ridgeRegress(x,y,L):
 	I = np.identity(x[0].size) 
-	theta = ((x.T*x)+L*I)*(x.T*y)
+	theta = (np.linalg.inv((x.T*x)+L*I))*(x.T*y)
 	return theta
 
 
 
-# (Hint1: you should implement a function to split the data into ten folds; 
-# 	then loop over the folds;use one as test, the rest train )
-# (Hint2: for each fold, on the train part, perform ridgeRegress to learn βk; 
-# 	Then use this βk on all samples in the test fold to get predicted yˆ; 
-# 	Then calculate the error (difference) between true y and yˆ, sum over 
-# 	all testing points in the current fold k. )
+def drange(start, stop, step):
+	r = start
+	while r < stop:
+		yield r
+		r += step
 
 def cv(x,y):
 	kFold = len(x)/10
-	L = 0.2
-	for i in range(0,10):
-		currVal = i*kFold
-		a = x[0:currVal]
-		b = x[currVal:len(x)-1]
-		xC = np.concatenate((a,b),axis = 0)
+	lowSum = 0
+	bestL = 0
+	for L in drange(0,1.02,0.02):
+		sum = 0
+		for i in range(0,10):
+			testFold = i*kFold
+			a = x[0:testFold]
+			b = x[testFold+kFold:len(x)]
+			xC = np.concatenate((a,b),axis = 0)
 
-		a = y[0:currVal]
-		b = y[currVal:(y.size - 1)]
-		yC = np.concatenate((a,b),axis = 0)
+			a = y[0:testFold]
+			b = y[testFold+kFold:(y.size)]
+			yC = np.concatenate((a,b),axis = 0)
 
-		Bk = ridgeRegress(xC,yC,L)
+			Bk = ridgeRegress(xC,yC,L)
 
-		y_hat = x[currVal:(currVal+kFold)]*Bk
+			y_hat = x[testFold:(testFold+kFold)]*Bk
+
+			for j in range(0,kFold):
+				sum = sum + abs(y[testFold+j] - y_hat[j])	
+		print L
+		print sum
+
+		if (L == 0):
+			lowsum = sum
+		else:
+			if sum < lowSum:
+				lowSum = sum
+				bestL = L
+
+	print bestL
+	
 
 
-		for j in range(0,kFold):
-			y[currVal+j] - y_hat[j]
 
-	#use Bk on test 
