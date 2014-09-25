@@ -28,26 +28,27 @@ def cv(x,y):
 	kFold = len(x)/10
 	lowSum = 0
 	bestL = 0
-	for L in drange(0,1.02,0.02):
-		sum = 0
-		for i in range(0,10):
-			testFold = i*kFold
-			a = x[0:testFold]
-			b = x[testFold+kFold:len(x)]
-			xC = np.concatenate((a,b),axis = 0)
 
-			a = y[0:testFold]
-			b = y[testFold+kFold:(y.size)]
-			yC = np.concatenate((a,b),axis = 0)
+	L = 0
+	#for L in drange(0,1.02,0.02):
+	sum = 0
+	for i in range(0,10):
+		testFold = i*kFold
+		a = x[0:testFold]
+		b = x[testFold+kFold:len(x)]
+		xC = np.concatenate((a,b),axis = 0)
 
-			Bk = ridgeRegress(xC,yC,L)
+		a = y[0:testFold]
+		b = y[testFold+kFold:(y.size)]
+		yC = np.concatenate((a,b),axis = 0)
 
-			y_hat = x[testFold:(testFold+kFold)]*Bk
+		Bk = ridgeRegress(xC,yC,L)
 
-			for j in range(0,kFold):
-				sum = sum + abs(y[testFold+j] - y_hat[j])	
-		print L
-		print sum
+		y_hat = x[testFold:(testFold+kFold)]*Bk
+
+		for j in range(0,kFold):
+			sum = sum + abs(y[testFold+j] - y_hat[j])	
+			print sum
 
 		if (L == 0):
 			lowsum = sum
@@ -57,7 +58,7 @@ def cv(x,y):
 				bestL = L
 
 	print bestL
-	
+
 
 
 
