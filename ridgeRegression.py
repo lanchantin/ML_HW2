@@ -29,35 +29,36 @@ def cv(x,y):
 	lowSum = 0
 	bestL = 0
 
-	L = 0
-	#for L in drange(0,1.02,0.02):
-	sum = 0
-	for i in range(0,10):
-		testFold = i*kFold
-		a = x[0:testFold]
-		b = x[testFold+kFold:len(x)]
-		xC = np.concatenate((a,b),axis = 0)
+	for L in drange(0,1.02,0.02):
+		sum = 0
+		for i in range(0,10):
+			testFold = i*kFold
+			a = x[0:testFold]
+			b = x[testFold+kFold:len(x)]
+			xC = np.concatenate((a,b),axis = 0)
 
-		a = y[0:testFold]
-		b = y[testFold+kFold:(y.size)]
-		yC = np.concatenate((a,b),axis = 0)
+			a = y[0:testFold]
+			b = y[testFold+kFold:(y.size)]
+			yC = np.concatenate((a,b),axis = 0)
 
-		Bk = ridgeRegress(xC,yC,L)
+			Bk = ridgeRegress(xC,yC,L)
 
-		y_hat = x[testFold:(testFold+kFold)]*Bk
+			y_hat = x[testFold:(testFold+kFold)]*Bk
 
-		for j in range(0,kFold):
-			sum = sum + abs(y[testFold+j] - y_hat[j])	
-			print sum
+			for j in range(0,kFold):
+				sum = sum + abs(y[testFold+j] - y_hat[j])
 
 		if (L == 0):
-			lowsum = sum
+			lowSum = sum
+			#print 'lowsum: ' + str(lowSum)
 		else:
+			#print 'if ' + str(sum) + '<' + str(lowSum)
 			if sum < lowSum:
 				lowSum = sum
 				bestL = L
+		print sum
 
-	print bestL
+	return bestL
 
 
 
