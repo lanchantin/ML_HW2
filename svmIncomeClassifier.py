@@ -22,43 +22,54 @@ def	processDataSet(dataFile):
 	sex = ['Female', 'Male'] 
 	nativeCountry = ['United-States', 'Cambodia', 'England', 'Puerto-Rico', 'Canada', 'Germany', 'Outlying-US(Guam-USVI-etc)', 'India', 'Japan', 'Greece', 'South', 'China', 'Cuba', 'Iran', 'Honduras', 'Philippines', 'Italy', 'Poland', 'Jamaica', 'Vietnam', 'Mexico', 'Portugal', 'Ireland', 'France', 'Dominican-Republic', 'Laos', 'Ecuador', 'Taiwan', 'Haiti', 'Columbia', 'Hungary', 'Guatemala', 'Nicaragua', 'Scotland', 'Thailand', 'Yugoslavia', 'El-Salvador', 'Trinadad&Tobago', 'Peru', 'Hong', 'Holand-Netherlands']
 
+	salary = ['>50K', '<=50K']
 
 	for i in range(0,x.shape[0]):
 		try:
-			x[i,1] = workclass.index(x[i,1])
+			x[i,1] = float(workclass.index(x[i,1]))
 		except ValueError:
-			x[i,1] = ''
+			x[i,1] = float(0)
 		try:
-			x[i,3] = education.index(x[i,3])
+			x[i,3] = float(education.index(x[i,3]))
 		except ValueError:
-			x[i,3] = ''
+			x[i,3] = float(0)
 		try:
-			x[i,5] = maritalStatus.index(x[i,5])
+			x[i,5] = float(maritalStatus.index(x[i,5]))
 		except ValueError:
-			x[i,5] = ''
+			x[i,5] = float(0)
 		try:
-			x[i,6] = occupation.index(x[i,6])
+			x[i,6] = float(occupation.index(x[i,6]))
 		except ValueError:
-			x[i,6] = ''
+			x[i,6] = float(0)
 		try:
-			x[i,7] = relationship.index(x[i,7])
+			x[i,7] = float(relationship.index(x[i,7]))
 		except ValueError:
-			x[i,7] = ''
+			x[i,7] = float(0)
 		try:
-			x[i,8] = race.index(x[i,8])
+			x[i,8] = float(race.index(x[i,8]))
 		except ValueError:
-			x[i,8] = ''
+			x[i,8] = float(0)
 		try:
-			x[i,9] = sex.index(x[i,9])
+			x[i,9] = float(sex.index(x[i,9]))
 		except ValueError:
-			x[i,9] = ''
+			x[i,9] = float(0)
 		try:
-			x[i,13] = nativeCountry.index(x[i,13])
+			x[i,13] = float(nativeCountry.index(x[i,13]))
 		except ValueError:
-			x[i,13] = ''
+			x[i,13] = float(0)
+
+	for i in range(0,y.shape[0]):
+		try:
+			y[i,0] = float(salary.index(y[i,0]))
+		except ValueError:
+			y[i,0] = float(0)
+
 
 	return (x,y)
 
+
+X = np.array([[float('-1'), float('-1')], [float('-2'), float('-1')], [float('1'), float('1')], [float('2'), float('1')]])
+y = np.array([float('1'), float('1'), float('2'), float('2')])
 
 
 # 0age: continuous.
