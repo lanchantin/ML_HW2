@@ -68,8 +68,8 @@ def	processDataSet(dataFile):
 	return (x,y)
 
 
-X = np.array([[float('-1'), float('-1')], [float('-2'), float('-1')], [float('1'), float('1')], [float('2'), float('1')]])
-y = np.array([float('1'), float('1'), float('2'), float('2')])
+#X = np.array([[float('-1'), float('-1')], [float('-2'), float('-1')], [float('1'), float('1')], [float('2'), float('1')]])
+#y = np.array([float('1'), float('1'), float('2'), float('2')])
 
 
 # 0age: continuous.
