@@ -26,7 +26,7 @@ def drange(start, stop, step):
 
 def cv(x,y):
 	kFold = len(x)/10
-	lowSum = 0
+	lowAvg = 0
 	bestL = 0
 
 	for L in drange(0,1.02,0.02):
@@ -49,17 +49,22 @@ def cv(x,y):
 				sum = sum + abs(y[testFold+j] - y_hat[j])
 
 		if (L == 0):
-			lowSum = sum
-			#print 'lowsum: ' + str(lowSum)
+			lowAvg = sum/10
+			#print 'lowsum: ' + str(lowAvg)
 		else:
-			#print 'if ' + str(sum) + '<' + str(lowSum)
-			if sum < lowSum:
-				lowSum = sum
+			#print 'if ' + str(sum) + '<' + str(lowAvg)
+			if sum/10 < lowAvg:
+				lowAvg = sum/10
 				bestL = L
-		print sum
+		print sum/10
 
 	return bestL
 
 
+def run():
+	x,y = loadDataSet('RRdata.txt')
+	lambdaBest = cv(x,y)
+	betaRR = ridgeRegress(x,y,lambdaBest)
+	
 
-
+	return lambdaBest,betaRR
