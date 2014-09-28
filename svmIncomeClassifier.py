@@ -7,7 +7,8 @@ from sklearn import preprocessing
 from sklearn.preprocessing import OneHotEncoder
 dataFile = 'adult.data'
 
-def removeNan(x):
+def removeNan(x,y):
+	print 'removing NaN...'
 	for i in range(0,x.shape[0]):
 		if(i < len(x)):
 			for j in range(0,x.shape[1]):
@@ -22,9 +23,9 @@ def removeNan(x):
 					x = np.delete(x, i, 0)
 					y = np.delete(y, i, 0)
 					break
-	return x
+	return (x,y)
 
-def	processDataSet(dataFile):
+def processDataSet(dataFile):
 	fileMatrix = np.loadtxt('adult.data', dtype = 'string', delimiter = ", ",unpack=True).transpose()
 	x = np.delete(fileMatrix,((fileMatrix.shape)[1] -1), 1)
 	y = fileMatrix[:,((fileMatrix.shape)[1] -1)]
@@ -40,7 +41,10 @@ def	processDataSet(dataFile):
 	salary = ['>50K', '<=50K']
 
 
-	x = removeNan(x)
+	x,y = removeNan(x,y)
+
+	for i in range(0,y.shape[0]):
+		y[i] = int(salary.index(y[i]))
 
 	s = (x.shape[0], 105)
 	z = np.zeros(s)
@@ -61,8 +65,6 @@ def	processDataSet(dataFile):
 		z[i,61] = x[i,12]
 		z[i,nativeCountry.index(x[i,13])+62] = 1
 
-	
-
 	scaler = preprocessing.StandardScaler().fit(z[:,0])
 	z[:,0] = scaler.transform(z[:,0])                               
 	scaler = preprocessing.StandardScaler().fit(z[:,2])
@@ -76,8 +78,7 @@ def	processDataSet(dataFile):
 	scaler = preprocessing.StandardScaler().fit(z[:,12])
 	z[:,12] = scaler.transform(z[:,12])      
 
-	for i in range(0,y.shape[0]):
-		y[i] = int(salary.index(y[i]))
+
 	
 	clf = SVC()
 	clf.set_params(C=0.1, kernel='rbf', degree=3, gamma=0.0, coef0=0.0, shrinking=True, probability=False, tol=0.001, cache_size=200, class_weight=None, verbose=False, max_iter=-1, random_state=None)
@@ -98,11 +99,6 @@ def	processDataSet(dataFile):
 
 	for i in range(0,500):
 		print(clf.predict(z[i]))
-
-	for i in range(0,y.shape[0]):
-		if (clf.predict(z[i]) != '1'):
-			print 7
-
 
 
 
@@ -191,7 +187,3 @@ for i in range(0,x.shape[0]):
 # 	z[i,11] = int(z[i,11])
 # 	z[i,12] = int(z[i,12])
 # 	z[i,13] = int(z[i,13])
-
-
-
- 
