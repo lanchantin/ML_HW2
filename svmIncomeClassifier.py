@@ -25,27 +25,8 @@ def removeNan(x,y):
 					break
 	return (x,y)
 
-def processDataSet(dataFile):
-	fileMatrix = np.loadtxt('adult.data', dtype = 'string', delimiter = ", ",unpack=True).transpose()
-	x = np.delete(fileMatrix,((fileMatrix.shape)[1] -1), 1)
-	y = fileMatrix[:,((fileMatrix.shape)[1] -1)]
 
-	workclass = ['Private', 'Self-emp-not-inc', 'Self-emp-inc', 'Federal-gov', 'Local-gov', 'State-gov', 'Without-pay', 'Never-worked']
-	education =  ['Bachelors', 'Some-college', '11th', 'HS-grad', 'Prof-school', 'Assoc-acdm', 'Assoc-voc', '9th', '7th-8th', '12th', 'Masters', '1st-4th', '10th', 'Doctorate', '5th-6th', 'Preschool']
-	maritalStatus = ['Married-civ-spouse', 'Divorced', 'Never-married', 'Separated', 'Widowed', 'Married-spouse-absent', 'Married-AF-spouse']
-	occupation = ['Tech-support', 'Craft-repair', 'Other-service', 'Sales', 'Exec-managerial', 'Prof-specialty', 'Handlers-cleaners', 'Machine-op-inspct', 'Adm-clerical', 'Farming-fishing', 'Transport-moving', 'Priv-house-serv', 'Protective-serv', 'Armed-Forces'] 
-	relationship = ['Wife', 'Own-child', 'Husband', 'Not-in-family', 'Other-relative', 'Unmarried'] 
-	race = ['White', 'Asian-Pac-Islander', 'Amer-Indian-Eskimo', 'Other', 'Black']
-	sex = ['Female', 'Male'] 
-	nativeCountry = ['United-States', 'Cambodia', 'England', 'Puerto-Rico', 'Canada', 'Germany', 'Outlying-US(Guam-USVI-etc)', 'India', 'Japan', 'Greece', 'South', 'China', 'Cuba', 'Iran', 'Honduras', 'Philippines', 'Italy', 'Poland', 'Jamaica', 'Vietnam', 'Mexico', 'Portugal', 'Ireland', 'France', 'Dominican-Republic', 'Laos', 'Ecuador', 'Taiwan', 'Haiti', 'Columbia', 'Hungary', 'Guatemala', 'Nicaragua', 'Scotland', 'Thailand', 'Yugoslavia', 'El-Salvador', 'Trinadad&Tobago', 'Peru', 'Hong', 'Holand-Netherlands']
-	salary = ['>50K', '<=50K']
-
-
-	x,y = removeNan(x,y)
-
-	for i in range(0,y.shape[0]):
-		y[i] = int(salary.index(y[i]))
-
+def createZ(x):
 	s = (x.shape[0], 105)
 	z = np.zeros(s)
 
@@ -76,14 +57,52 @@ def processDataSet(dataFile):
 	scaler = preprocessing.StandardScaler().fit(z[:,11])
 	z[:,11] = scaler.transform(z[:,11])  
 	scaler = preprocessing.StandardScaler().fit(z[:,12])
-	z[:,12] = scaler.transform(z[:,12])      
+	z[:,12] = scaler.transform(z[:,12])  
+
+	return z    
+
+def processDataSet(dataFile):
+	fileMatrix = np.loadtxt('adult.data', dtype = 'string', delimiter = ", ",unpack=True).transpose()
+	x = np.delete(fileMatrix,((fileMatrix.shape)[1] -1), 1)
+	y = fileMatrix[:,((fileMatrix.shape)[1] -1)]
+
+	workclass = ['Private', 'Self-emp-not-inc', 'Self-emp-inc', 'Federal-gov', 'Local-gov', 
+	'State-gov', 'Without-pay', 'Never-worked']
+	education =  ['Bachelors', 'Some-college', '11th', 'HS-grad', 'Prof-school', 'Assoc-acdm', 
+	'Assoc-voc', '9th', '7th-8th', '12th', 'Masters', '1st-4th', '10th', 'Doctorate', '5th-6th', 
+	'Preschool']
+	maritalStatus = ['Married-civ-spouse', 'Divorced', 'Never-married', 'Separated', 'Widowed', 
+	'Married-spouse-absent', 'Married-AF-spouse']
+	occupation = ['Tech-support', 'Craft-repair', 'Other-service', 'Sales', 'Exec-managerial', 
+	'Prof-specialty', 'Handlers-cleaners', 'Machine-op-inspct', 'Adm-clerical', 'Farming-fishing', 'Transport-moving', 'Priv-house-serv', 'Protective-serv', 'Armed-Forces'] 
+	relationship = ['Wife', 'Own-child', 'Husband', 'Not-in-family', 'Other-relative', 
+	'Unmarried'] 
+	race = ['White', 'Asian-Pac-Islander', 'Amer-Indian-Eskimo', 'Other', 'Black']
+	sex = ['Female', 'Male'] 
+	nativeCountry = ['United-States', 'Cambodia', 'England', 'Puerto-Rico', 'Canada', 
+	'Germany', 'Outlying-US(Guam-USVI-etc)', 'India', 'Japan', 'Greece', 'South', 'China', 
+	'Cuba', 'Iran', 'Honduras', 'Philippines', 'Italy', 'Poland', 'Jamaica', 'Vietnam', 
+	'Mexico', 'Portugal', 'Ireland', 'France', 'Dominican-Republic', 'Laos', 'Ecuador', 
+	'Taiwan', 'Haiti', 'Columbia', 'Hungary', 'Guatemala', 'Nicaragua', 'Scotland', 'Thailand', 
+	'Yugoslavia', 'El-Salvador', 'Trinadad&Tobago', 'Peru', 'Hong', 'Holand-Netherlands']
+	salary = ['>50K', '<=50K']
 
 
-###########################
+	x,y = removeNan(x,y)
+
+	for i in range(0,y.shape[0]):
+		y[i] = int(salary.index(y[i]))
+
+
+	z = createZ(x)
+
+#################################################################################
 	clf = SVC()
-	clf.set_params(C=.01, kernel='linear', degree=3, gamma=0.0, coef0=0.0, shrinking=True, probability=False, tol=0.001, cache_size=200, class_weight=None, verbose=False, max_iter=-1, random_state=None)
+	clf.set_params(C=.01, kernel='linear', degree=3, gamma=0.0, 
+		coef0=0.0, shrinking=True, probability=False, tol=0.001, cache_size=200, 
+		class_weight=None, verbose=False, max_iter=-1, random_state=None)
 	clf.fit(z, y) 
-############################
+##################################################################################
 
 	fileMatrix = np.loadtxt('adult.test', dtype = 'string', delimiter = ", ",unpack=True).transpose()
 	x2 = np.delete(fileMatrix,((fileMatrix.shape)[1] -1), 1)
@@ -95,37 +114,7 @@ def processDataSet(dataFile):
 	for i in range(0,y2.shape[0]):
 		y2[i] = int(salary.index(y2[i]))
 
-	s = (x2.shape[0], 105)
-	z2 = np.zeros(s)
-
-	for i in range(0,x2.shape[0]):
-		z2[i,0] = x2[i,0]
-		z2[i,workclass.index(x2[i,1])+1] = 1
-		z2[i,9] = x2[i,2]
-		z2[i,education.index(x2[i,3])+10] = 1
-		z2[i,26] = x2[i,4]
-		z2[i,maritalStatus.index(x2[i,5])+27] = 1
-		z2[i,occupation.index(x2[i,6])+34] = 1
-		z2[i,relationship.index(x2[i,7])+48] = 1
-		z2[i,race.index(x2[i,8])+53] = 1
-		z2[i,sex.index(x2[i,9])+58] = 1
-		z2[i,59] = x2[i,10]
-		z2[i,60] = x2[i,11]
-		z2[i,61] = x2[i,12]
-		z2[i,nativeCountry.index(x2[i,13])+62] = 1
-
-	scaler = preprocessing.StandardScaler().fit(z2[:,0])
-	z2[:,0] = scaler.transform(z2[:,0])                               
-	scaler = preprocessing.StandardScaler().fit(z2[:,2])
-	z2[:,2] = scaler.transform(z2[:,2])      
-	scaler = preprocessing.StandardScaler().fit(z2[:,4])
-	z2[:,4] = scaler.transform(z2[:,4]) 
-	scaler = preprocessing.StandardScaler().fit(z2[:,10])
-	z2[:,10] = scaler.transform(z2[:,10])   
-	scaler = preprocessing.StandardScaler().fit(z2[:,11])
-	z2[:,11] = scaler.transform(z2[:,11])  
-	scaler = preprocessing.StandardScaler().fit(z2[:,12])
-	z2[:,12] = scaler.transform(z2[:,12])   
+	z2 = createZ(x2)
 
 	k = 0
 	for i in range(0,y2.shape[0]):
@@ -175,23 +164,23 @@ def processDataSet(dataFile):
 
 
 
-enc = OneHotEncoder(n_values='auto', categorical_features=[1,3,5,6,7,8,9,13], dtype=<type 'str'>, sparse=True)
-len(workclass) + len(education) + len(maritalStatus) + len(occupation) + len(relationship) + len(race) + len(sex) + len(nativeCountry) =  99
-for i in range(0,x.shape[0]):
-	x[i,0] = int(x[i,0])
-	x[i,1] = int(workclass.index(x[i,1]))
-	x[i,2] = int(x[i,2])
-	x[i,3] = int(education.index(x[i,3]))
-	x[i,4] = int(x[i,4])
-	x[i,5] = int(maritalStatus.index(x[i,5]))
-	x[i,6] = int(occupation.index(x[i,6]))
-	x[i,7] = int(relationship.index(x[i,7]))
-	x[i,8] = int(race.index(x[i,8]))
-	x[i,9] = int(sex.index(x[i,9]))
-	x[i,10] = int(x[i,10])
-	x[i,11] = int(x[i,11])
-	x[i,12] = int(x[i,12])
-	x[i,13] = int(nativeCountry.index(x[i,13]))
+# enc = OneHotEncoder(n_values='auto', categorical_features=[1,3,5,6,7,8,9,13], dtype=<type 'str'>, sparse=True)
+# len(workclass) + len(education) + len(maritalStatus) + len(occupation) + len(relationship) + len(race) + len(sex) + len(nativeCountry) =  99
+# for i in range(0,x.shape[0]):
+# 	x[i,0] = int(x[i,0])
+# 	x[i,1] = int(workclass.index(x[i,1]))
+# 	x[i,2] = int(x[i,2])
+# 	x[i,3] = int(education.index(x[i,3]))
+# 	x[i,4] = int(x[i,4])
+# 	x[i,5] = int(maritalStatus.index(x[i,5]))
+# 	x[i,6] = int(occupation.index(x[i,6]))
+# 	x[i,7] = int(relationship.index(x[i,7]))
+# 	x[i,8] = int(race.index(x[i,8]))
+# 	x[i,9] = int(sex.index(x[i,9]))
+# 	x[i,10] = int(x[i,10])
+# 	x[i,11] = int(x[i,11])
+# 	x[i,12] = int(x[i,12])
+# 	x[i,13] = int(nativeCountry.index(x[i,13]))
 
 
 
