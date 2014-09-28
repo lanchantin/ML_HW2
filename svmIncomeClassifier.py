@@ -79,26 +79,64 @@ def processDataSet(dataFile):
 	z[:,12] = scaler.transform(z[:,12])      
 
 
-	
+###########################
 	clf = SVC()
-	clf.set_params(C=0.1, kernel='rbf', degree=3, gamma=0.0, coef0=0.0, shrinking=True, probability=False, tol=0.001, cache_size=200, class_weight=None, verbose=False, max_iter=-1, random_state=None)
+	clf.set_params(C=.01, kernel='linear', degree=3, gamma=0.0, coef0=0.0, shrinking=True, probability=False, tol=0.001, cache_size=200, class_weight=None, verbose=False, max_iter=-1, random_state=None)
 	clf.fit(z, y) 
-
+############################
 
 	fileMatrix = np.loadtxt('adult.test', dtype = 'string', delimiter = ", ",unpack=True).transpose()
-	x = np.delete(fileMatrix,((fileMatrix.shape)[1] -1), 1)
-	y = fileMatrix[:,((fileMatrix.shape)[1] -1)]
+	x2 = np.delete(fileMatrix,((fileMatrix.shape)[1] -1), 1)
+	y2 = fileMatrix[:,((fileMatrix.shape)[1] -1)]
 	salary = ['>50K.', '<=50K.']
 
+	x2,y2 = removeNan(x2,y2)
+
+	for i in range(0,y2.shape[0]):
+		y2[i] = int(salary.index(y2[i]))
+
+	s = (x2.shape[0], 105)
+	z2 = np.zeros(s)
+
+	for i in range(0,x2.shape[0]):
+		z2[i,0] = x2[i,0]
+		z2[i,workclass.index(x2[i,1])+1] = 1
+		z2[i,9] = x2[i,2]
+		z2[i,education.index(x2[i,3])+10] = 1
+		z2[i,26] = x2[i,4]
+		z2[i,maritalStatus.index(x2[i,5])+27] = 1
+		z2[i,occupation.index(x2[i,6])+34] = 1
+		z2[i,relationship.index(x2[i,7])+48] = 1
+		z2[i,race.index(x2[i,8])+53] = 1
+		z2[i,sex.index(x2[i,9])+58] = 1
+		z2[i,59] = x2[i,10]
+		z2[i,60] = x2[i,11]
+		z2[i,61] = x2[i,12]
+		z2[i,nativeCountry.index(x2[i,13])+62] = 1
+
+	scaler = preprocessing.StandardScaler().fit(z2[:,0])
+	z2[:,0] = scaler.transform(z2[:,0])                               
+	scaler = preprocessing.StandardScaler().fit(z2[:,2])
+	z2[:,2] = scaler.transform(z2[:,2])      
+	scaler = preprocessing.StandardScaler().fit(z2[:,4])
+	z2[:,4] = scaler.transform(z2[:,4]) 
+	scaler = preprocessing.StandardScaler().fit(z2[:,10])
+	z2[:,10] = scaler.transform(z2[:,10])   
+	scaler = preprocessing.StandardScaler().fit(z2[:,11])
+	z2[:,11] = scaler.transform(z2[:,11])  
+	scaler = preprocessing.StandardScaler().fit(z2[:,12])
+	z2[:,12] = scaler.transform(z2[:,12])   
+
 	k = 0
-	for i in range(0,y.shape[0]):
-		if (clf.predict(z[i]) == y[i]):
+	for i in range(0,y2.shape[0]):
+		if (clf.predict(z2[i]) == y2[i]):
 			k = k+1
+
 	print k
 
 
 	for i in range(0,500):
-		print(clf.predict(z[i]))
+		print(clf.predict(z2[i]))
 
 
 
