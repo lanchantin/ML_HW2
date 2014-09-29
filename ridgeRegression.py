@@ -67,6 +67,4 @@ def run():
 	x,y = loadDataSet('RRdata.txt')
 	lambdaBest = cv(x,y)
 	betaRR = ridgeRegress(x,y,lambdaBest)
-	
-
 	return lambdaBest,betaRR
