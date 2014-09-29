@@ -1,19 +1,18 @@
 #!/usr/bin/python
 import sys
 import numpy as np
-import matplotlib.pyplot as pl
-
+dataFile = 'RRdata.txt'
 
 def loadDataSet(dataFile):
-	xval = np.asmatrix(np.loadtxt(dataFile, delimiter = " ", usecols=(0,1,2),unpack=True)).transpose()
-	yval = np.asmatrix(np.loadtxt(dataFile, delimiter = " ", usecols=(3,),unpack=True)).transpose()
+	xval = np.loadtxt(dataFile, delimiter = " ", usecols=(0,1,2),unpack=True).transpose()
+	yval = np.loadtxt(dataFile, delimiter = " ", usecols=(3,),unpack=True).transpose()
 
 	return (xval,yval)
 
 
 def ridgeRegress(x,y,L):
 	I = np.identity(x[0].size) 
-	theta = (np.linalg.inv((x.T*x)+L*I))*(x.T*y)
+	theta = np.dot((np.linalg.inv(np.dot(x.T,x)+L*I)),np.dot(x.T,y))
 	return theta
 
 
@@ -29,24 +28,27 @@ def cv(x,y):
 	lowAvg = 0
 	bestL = 0
 
+	#np.random.shuffle(x)
+
 	for L in drange(0,1.02,0.02):
 		sum = 0
 		for i in range(0,10):
 			testFold = i*kFold
 			a = x[0:testFold]
-			b = x[testFold+kFold:len(x)]
-			xC = np.concatenate((a,b),axis = 0)
+			b = x[testFold+kFold:x.shape[0]]
+			xTrain = np.concatenate((a,b),axis = 0)
 
 			a = y[0:testFold]
-			b = y[testFold+kFold:(y.size)]
-			yC = np.concatenate((a,b),axis = 0)
+			b = y[testFold+kFold:y.shape[0]]
+			yTrain = np.concatenate((a,b),axis = 0)
 
-			Bk = ridgeRegress(xC,yC,L)
+			Bk = ridgeRegress(xTrain,yTrain,L)
 
-			y_hat = x[testFold:(testFold+kFold)]*Bk
+			y_hat = np.dot(x[testFold:(testFold+kFold)],Bk)
 
 			for j in range(0,kFold):
 				sum = sum + abs(y[testFold+j] - y_hat[j])
+		print sum
 
 		if (L == 0):
 			lowAvg = sum/10
