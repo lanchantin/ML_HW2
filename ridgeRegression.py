@@ -1,7 +1,10 @@
 #!/usr/bin/python
 import sys
 import numpy as np
+import math
+import random
 dataFile = 'RRdata.txt'
+
 
 def loadDataSet(dataFile):
 	xval = np.loadtxt(dataFile, delimiter = " ", usecols=(0,1,2),unpack=True).transpose()
@@ -15,10 +18,10 @@ def ridgeRegress(x,y,L):
 	theta = np.dot((np.linalg.inv(np.dot(x.T,x)+L*I)),np.dot(x.T,y))
 	return theta
 
-Bk = ridgeRegress(xval,yval,0)
-Z = np.dot(xval,Bk)
-X, Y = np.meshgrid(x[:,1], x[:,2])
-ax.plot_surface(X, Y, yval)
+# Bk = ridgeRegress(xval,yval,0)
+# Z = np.dot(xval,Bk)
+# X, Y = np.meshgrid(x[:,1], x[:,2])
+# ax.plot_surface(X, Y, yval)
 
 
 
@@ -30,10 +33,12 @@ def drange(start, stop, step):
 
 def cv(x,y):
 	kFold = len(x)/10
-	lowAvg = 0
+	lowSum = 0
 	bestL = 0
 
-	#np.random.shuffle(x)
+	random.seed(30)
+	random.shuffle(x)
+	random.shuffle(y)
 
 	for L in drange(0,1.02,0.02):
 		sum = 0
@@ -56,14 +61,14 @@ def cv(x,y):
 		print sum
 
 		if (L == 0):
-			lowAvg = sum/10
+			lowSum = sum
 			#print 'lowsum: ' + str(lowAvg)
 		else:
 			#print 'if ' + str(sum) + '<' + str(lowAvg)
-			if sum/10 < lowAvg:
-				lowAvg = sum/10
+			if sum < lowSum:
+				lowSum = sum
 				bestL = L
-		print sum/10
+		print sum
 
 	return bestL
 
