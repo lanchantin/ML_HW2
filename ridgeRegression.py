@@ -15,6 +15,11 @@ def ridgeRegress(x,y,L):
 	theta = np.dot((np.linalg.inv(np.dot(x.T,x)+L*I)),np.dot(x.T,y))
 	return theta
 
+Bk = ridgeRegress(xval,yval,0)
+Z = np.dot(xval,Bk)
+X, Y = np.meshgrid(x[:,1], x[:,2])
+ax.plot_surface(X, Y, yval)
+
 
 
 def drange(start, stop, step):
@@ -47,7 +52,7 @@ def cv(x,y):
 			y_hat = np.dot(x[testFold:(testFold+kFold)],Bk)
 
 			for j in range(0,kFold):
-				sum = sum + abs(y[testFold+j] - y_hat[j])
+				sum = sum + math.pow((y[testFold+j] - y_hat[j]),2)
 		print sum
 
 		if (L == 0):

@@ -8,7 +8,6 @@ from sklearn.preprocessing import OneHotEncoder
 dataFile = 'adult.data'
 
 def removeNan(x,y):
-	print 'removing NaN...'
 	for i in range(0,x.shape[0]):
 		if(i < len(x)):
 			for j in range(0,x.shape[1]):
@@ -27,64 +26,53 @@ def removeNan(x,y):
 
 
 def createZ(x):
-	s = (x.shape[0], 105)
+	s = (x.shape[0], 107)
 	z = np.zeros(s)
 
 	for i in range(0,x.shape[0]):
 		z[i,0] = x[i,0]
-		z[i,workclass.index(x[i,1])+1] = 1
+		z[i,workclass.index(x[i,1])+1] = int(1)
 		z[i,9] = x[i,2]
 		z[i,education.index(x[i,3])+10] = 1
 		z[i,26] = x[i,4]
 		z[i,maritalStatus.index(x[i,5])+27] = 1
 		z[i,occupation.index(x[i,6])+34] = 1
 		z[i,relationship.index(x[i,7])+48] = 1
-		z[i,race.index(x[i,8])+53] = 1
-		z[i,sex.index(x[i,9])+58] = 1
-		z[i,59] = x[i,10]
-		z[i,60] = x[i,11]
-		z[i,61] = x[i,12]
-		z[i,nativeCountry.index(x[i,13])+62] = 1
+		z[i,race.index(x[i,8])+54] = 1
+		z[i,sex.index(x[i,9])+59] = 1
+		z[i,61] = x[i,10]
+		z[i,62] = x[i,11]
+		z[i,63] = x[i,12]
+		z[i,nativeCountry.index(x[i,13])+64] = 1
 
 	scaler = preprocessing.StandardScaler().fit(z[:,0])
 	z[:,0] = scaler.transform(z[:,0])                               
-	scaler = preprocessing.StandardScaler().fit(z[:,2])
-	z[:,2] = scaler.transform(z[:,2])      
-	scaler = preprocessing.StandardScaler().fit(z[:,4])
-	z[:,4] = scaler.transform(z[:,4]) 
-	scaler = preprocessing.StandardScaler().fit(z[:,10])
-	z[:,10] = scaler.transform(z[:,10])   
-	scaler = preprocessing.StandardScaler().fit(z[:,11])
-	z[:,11] = scaler.transform(z[:,11])  
-	scaler = preprocessing.StandardScaler().fit(z[:,12])
-	z[:,12] = scaler.transform(z[:,12])  
+	scaler = preprocessing.StandardScaler().fit(z[:,9])
+	z[:,9] = scaler.transform(z[:,9])      
+	scaler = preprocessing.StandardScaler().fit(z[:,26])
+	z[:,26] = scaler.transform(z[:,26]) 
+	scaler = preprocessing.StandardScaler().fit(z[:,61])
+	z[:,61] = scaler.transform(z[:,61])   
+	scaler = preprocessing.StandardScaler().fit(z[:,62])
+	z[:,62] = scaler.transform(z[:,62])  
+	scaler = preprocessing.StandardScaler().fit(z[:,63])
+	z[:,63] = scaler.transform(z[:,63])  
 
 	return z    
 
 def processDataSet(dataFile):
-	fileMatrix = np.loadtxt('adult.data', dtype = 'string', delimiter = ", ",unpack=True).transpose()
+	fileMatrix = np.loadtxt('adult.data', dtype = 'S26', delimiter = ", ")
 	x = np.delete(fileMatrix,((fileMatrix.shape)[1] -1), 1)
 	y = fileMatrix[:,((fileMatrix.shape)[1] -1)]
 
-	workclass = ['Private', 'Self-emp-not-inc', 'Self-emp-inc', 'Federal-gov', 'Local-gov', 
-	'State-gov', 'Without-pay', 'Never-worked']
-	education =  ['Bachelors', 'Some-college', '11th', 'HS-grad', 'Prof-school', 'Assoc-acdm', 
-	'Assoc-voc', '9th', '7th-8th', '12th', 'Masters', '1st-4th', '10th', 'Doctorate', '5th-6th', 
-	'Preschool']
-	maritalStatus = ['Married-civ-spouse', 'Divorced', 'Never-married', 'Separated', 'Widowed', 
-	'Married-spouse-absent', 'Married-AF-spouse']
-	occupation = ['Tech-support', 'Craft-repair', 'Other-service', 'Sales', 'Exec-managerial', 
-	'Prof-specialty', 'Handlers-cleaners', 'Machine-op-inspct', 'Adm-clerical', 'Farming-fishing', 'Transport-moving', 'Priv-house-serv', 'Protective-serv', 'Armed-Forces'] 
-	relationship = ['Wife', 'Own-child', 'Husband', 'Not-in-family', 'Other-relative', 
-	'Unmarried'] 
+	workclass = ['Private', 'Self-emp-not-inc', 'Self-emp-inc', 'Federal-gov', 'Local-gov', 'State-gov', 'Without-pay', 'Never-worked']
+	education =  ['Bachelors', 'Some-college', '11th', 'HS-grad', 'Prof-school', 'Assoc-acdm', 'Assoc-voc', '9th', '7th-8th', '12th', 'Masters', '1st-4th', '10th', 'Doctorate', '5th-6th', 'Preschool']
+	maritalStatus = ['Married-civ-spouse', 'Divorced', 'Never-married', 'Separated', 'Widowed', 'Married-spouse-absent', 'Married-AF-spouse']
+	occupation = ['Tech-support', 'Craft-repair', 'Other-service', 'Sales', 'Exec-managerial', 'Prof-specialty', 'Handlers-cleaners', 'Machine-op-inspct', 'Adm-clerical', 'Farming-fishing', 'Transport-moving', 'Priv-house-serv', 'Protective-serv', 'Armed-Forces'] 
+	relationship = ['Wife', 'Own-child', 'Husband', 'Not-in-family', 'Other-relative', 'Unmarried'] 
 	race = ['White', 'Asian-Pac-Islander', 'Amer-Indian-Eskimo', 'Other', 'Black']
 	sex = ['Female', 'Male'] 
-	nativeCountry = ['United-States', 'Cambodia', 'England', 'Puerto-Rico', 'Canada', 
-	'Germany', 'Outlying-US(Guam-USVI-etc)', 'India', 'Japan', 'Greece', 'South', 'China', 
-	'Cuba', 'Iran', 'Honduras', 'Philippines', 'Italy', 'Poland', 'Jamaica', 'Vietnam', 
-	'Mexico', 'Portugal', 'Ireland', 'France', 'Dominican-Republic', 'Laos', 'Ecuador', 
-	'Taiwan', 'Haiti', 'Columbia', 'Hungary', 'Guatemala', 'Nicaragua', 'Scotland', 'Thailand', 
-	'Yugoslavia', 'El-Salvador', 'Trinadad&Tobago', 'Peru', 'Hong', 'Holand-Netherlands']
+	nativeCountry = ['United-States', 'Cambodia', 'England', 'Puerto-Rico', 'Canada', 'Germany', 'Outlying-US(Guam-USVI-etc)', 'India', 'Japan', 'Greece', 'South', 'China', 'Cuba', 'Iran', 'Honduras', 'Philippines', 'Italy', 'Poland', 'Jamaica', 'Vietnam', 'Mexico', 'Portugal', 'Ireland', 'France', 'Dominican-Republic', 'Laos', 'Ecuador', 'Taiwan', 'Haiti', 'Columbia', 'Hungary', 'Guatemala', 'Nicaragua', 'Scotland', 'Thailand', 'Yugoslavia', 'El-Salvador', 'Trinadad&Tobago', 'Peru', 'Hong', 'Holand-Netherlands']
 	salary = ['>50K', '<=50K']
 
 
@@ -98,13 +86,13 @@ def processDataSet(dataFile):
 
 #################################################################################
 	clf = SVC()
-	clf.set_params(C=.01, kernel='linear', degree=3, gamma=0.0, 
+	clf.set_params(C=1, kernel='rbf', degree=3, gamma=0.0, 
 		coef0=0.0, shrinking=True, probability=False, tol=0.001, cache_size=200, 
 		class_weight=None, verbose=False, max_iter=-1, random_state=None)
 	clf.fit(z, y) 
 ##################################################################################
 
-	fileMatrix = np.loadtxt('adult.test', dtype = 'string', delimiter = ", ",unpack=True).transpose()
+	fileMatrix = np.loadtxt('adult.test', dtype = 'S26', delimiter = ", ")
 	x2 = np.delete(fileMatrix,((fileMatrix.shape)[1] -1), 1)
 	y2 = fileMatrix[:,((fileMatrix.shape)[1] -1)]
 	salary = ['>50K.', '<=50K.']
