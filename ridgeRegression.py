@@ -17,10 +17,19 @@ def ridgeRegress(x,y,L):
 	theta = np.dot((np.linalg.inv(np.dot(x.T,x)+(L*I))),np.dot(x.T,y))
 	return theta
 
-# Bk = ridgeRegress(xval,yval,0)
-# Z = np.dot(xval,Bk)
-# X, Y = np.meshgrid(x[:,1], x[:,2])
-# ax.plot_surface(X, Y, yval)
+x = xval
+y = yval
+from mpl_toolkits.mplot3d import Axes3D
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+
+X, Y = np.meshgrid(x[:,1], x[:,2])
+Z = y
+
+ax.plot_surface(X, Y, Z)
+plt.show()
+
+
 
 def drange(start, stop, step):
 	r = start

@@ -29,6 +29,16 @@ def createZ(x):
 	s = (x.shape[0], 107)
 	z = np.zeros(s)
 
+	workclass = ['Private', 'Self-emp-not-inc', 'Self-emp-inc', 'Federal-gov', 'Local-gov', 'State-gov', 'Without-pay', 'Never-worked']
+	education =  ['Bachelors', 'Some-college', '11th', 'HS-grad', 'Prof-school', 'Assoc-acdm', 'Assoc-voc', '9th', '7th-8th', '12th', 'Masters', '1st-4th', '10th', 'Doctorate', '5th-6th', 'Preschool']
+	maritalStatus = ['Married-civ-spouse', 'Divorced', 'Never-married', 'Separated', 'Widowed', 'Married-spouse-absent', 'Married-AF-spouse']
+	occupation = ['Tech-support', 'Craft-repair', 'Other-service', 'Sales', 'Exec-managerial', 'Prof-specialty', 'Handlers-cleaners', 'Machine-op-inspct', 'Adm-clerical', 'Farming-fishing', 'Transport-moving', 'Priv-house-serv', 'Protective-serv', 'Armed-Forces'] 
+	relationship = ['Wife', 'Own-child', 'Husband', 'Not-in-family', 'Other-relative', 'Unmarried'] 
+	race = ['White', 'Asian-Pac-Islander', 'Amer-Indian-Eskimo', 'Other', 'Black']
+	sex = ['Female', 'Male'] 
+	nativeCountry = ['United-States', 'Cambodia', 'England', 'Puerto-Rico', 'Canada', 'Germany', 'Outlying-US(Guam-USVI-etc)', 'India', 'Japan', 'Greece', 'South', 'China', 'Cuba', 'Iran', 'Honduras', 'Philippines', 'Italy', 'Poland', 'Jamaica', 'Vietnam', 'Mexico', 'Portugal', 'Ireland', 'France', 'Dominican-Republic', 'Laos', 'Ecuador', 'Taiwan', 'Haiti', 'Columbia', 'Hungary', 'Guatemala', 'Nicaragua', 'Scotland', 'Thailand', 'Yugoslavia', 'El-Salvador', 'Trinadad&Tobago', 'Peru', 'Hong', 'Holand-Netherlands']
+	salary = ['>50K', '<=50K']
+
 	for i in range(0,x.shape[0]):
 		z[i,0] = x[i,0]
 		z[i,workclass.index(x[i,1])+1] = int(1)
@@ -64,39 +74,32 @@ def processDataSet(dataFile):
 	fileMatrix = np.loadtxt('adult.data', dtype = 'S26', delimiter = ", ")
 	x = np.delete(fileMatrix,((fileMatrix.shape)[1] -1), 1)
 	y = fileMatrix[:,((fileMatrix.shape)[1] -1)]
-
-	workclass = ['Private', 'Self-emp-not-inc', 'Self-emp-inc', 'Federal-gov', 'Local-gov', 'State-gov', 'Without-pay', 'Never-worked']
-	education =  ['Bachelors', 'Some-college', '11th', 'HS-grad', 'Prof-school', 'Assoc-acdm', 'Assoc-voc', '9th', '7th-8th', '12th', 'Masters', '1st-4th', '10th', 'Doctorate', '5th-6th', 'Preschool']
-	maritalStatus = ['Married-civ-spouse', 'Divorced', 'Never-married', 'Separated', 'Widowed', 'Married-spouse-absent', 'Married-AF-spouse']
-	occupation = ['Tech-support', 'Craft-repair', 'Other-service', 'Sales', 'Exec-managerial', 'Prof-specialty', 'Handlers-cleaners', 'Machine-op-inspct', 'Adm-clerical', 'Farming-fishing', 'Transport-moving', 'Priv-house-serv', 'Protective-serv', 'Armed-Forces'] 
-	relationship = ['Wife', 'Own-child', 'Husband', 'Not-in-family', 'Other-relative', 'Unmarried'] 
-	race = ['White', 'Asian-Pac-Islander', 'Amer-Indian-Eskimo', 'Other', 'Black']
-	sex = ['Female', 'Male'] 
-	nativeCountry = ['United-States', 'Cambodia', 'England', 'Puerto-Rico', 'Canada', 'Germany', 'Outlying-US(Guam-USVI-etc)', 'India', 'Japan', 'Greece', 'South', 'China', 'Cuba', 'Iran', 'Honduras', 'Philippines', 'Italy', 'Poland', 'Jamaica', 'Vietnam', 'Mexico', 'Portugal', 'Ireland', 'France', 'Dominican-Republic', 'Laos', 'Ecuador', 'Taiwan', 'Haiti', 'Columbia', 'Hungary', 'Guatemala', 'Nicaragua', 'Scotland', 'Thailand', 'Yugoslavia', 'El-Salvador', 'Trinadad&Tobago', 'Peru', 'Hong', 'Holand-Netherlands']
 	salary = ['>50K', '<=50K']
 
-
+	print 'preprocessing training data...'
 	x,y = removeNan(x,y)
 
 	for i in range(0,y.shape[0]):
 		y[i] = int(salary.index(y[i]))
 
-
 	z = createZ(x)
 
 #################################################################################
+	print 'training SVM...'
 	clf = SVC()
 	clf.set_params(C=1, kernel='rbf', degree=3, gamma=0.0, 
 		coef0=0.0, shrinking=True, probability=False, tol=0.001, cache_size=200, 
 		class_weight=None, verbose=False, max_iter=-1, random_state=None)
 	clf.fit(z, y) 
+	print 'finished training'
 ##################################################################################
 
-	fileMatrix = np.loadtxt('adult.test', dtype = 'S26', delimiter = ", ")
+	fileMatrix = np.loadtxt(dataFile, dtype = 'S26', delimiter = ", ")
 	x2 = np.delete(fileMatrix,((fileMatrix.shape)[1] -1), 1)
 	y2 = fileMatrix[:,((fileMatrix.shape)[1] -1)]
 	salary = ['>50K.', '<=50K.']
 
+	print 'preprocessing test data...'
 	x2,y2 = removeNan(x2,y2)
 
 	for i in range(0,y2.shape[0]):
@@ -104,33 +107,30 @@ def processDataSet(dataFile):
 
 	z2 = createZ(x2)
 
+	print 'testing SVM...'
+	predictions = []
 	k = 0
 	for i in range(0,y2.shape[0]):
+		if (clf.predict(z2[i]) == '1'):
+			predictions.append('>50K')
+		else:
+			predictions.append('<=50K')
+
 		if (clf.predict(z2[i]) == y2[i]):
 			k = k+1
 
-	print k
+	length = len(y2)
+	acc = k/(length)
+	print 'Correctly predicted ' + str(k) + ' out of: ' + str(len(y2))
+	print 'Accuracy: ' + str(acc) + '%'
 
 
-	for i in range(0,500):
-		print(clf.predict(z2[i]))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	return predictions
+	# k = 0
+	# for i in range(0,y.shape[0]):
+	# 	if (clf.predict(z[i]) == y[i]):
+	# 		k = k+1
+	# print k
 
 
 
