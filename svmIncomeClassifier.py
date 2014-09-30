@@ -86,12 +86,12 @@ def processDataSet(dataFile):
 
 #################################################################################
 	print 'training SVM...'
-	clf = SVC()
-	clf.set_params(C=1, kernel='rbf', degree=3, gamma=0.0, 
+	clf = SVC(C=1, kernel='poly', degree=3, gamma=0.0, 
 		coef0=0.0, shrinking=True, probability=False, tol=0.001, cache_size=200, 
 		class_weight=None, verbose=False, max_iter=-1, random_state=None)
 	clf.fit(z, y) 
-	print 'finished training'
+	# 84.6547144754%
+
 ##################################################################################
 
 	fileMatrix = np.loadtxt(dataFile, dtype = 'S26', delimiter = ", ")
@@ -122,7 +122,7 @@ def processDataSet(dataFile):
 	length = len(y2)
 	acc = float(k)/float(length)
 	print 'Correctly predicted ' + str(k) + ' out of: ' + str(len(y2))
-	print 'Accuracy: ' + str(acc) + '%'
+	print 'Accuracy: ' + str(100*acc) + '%'
 
 
 	return predictions
