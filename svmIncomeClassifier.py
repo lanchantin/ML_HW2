@@ -120,7 +120,7 @@ def processDataSet(dataFile):
 			k = k+1
 
 	length = len(y2)
-	acc = k/(length)
+	acc = float(k)/float(length)
 	print 'Correctly predicted ' + str(k) + ' out of: ' + str(len(y2))
 	print 'Accuracy: ' + str(acc) + '%'
 
