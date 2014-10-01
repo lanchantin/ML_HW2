@@ -81,14 +81,14 @@ def processDataSet(dataFile):
 	z[:,63] = scaler6.transform(z[:,63]) 
 
 #################################################################################
+#################################################################################
 	print 'training SVM...'
 	clf = SVC(C=1, kernel='poly', degree=3, gamma=0.0, 
 		coef0=0.0, shrinking=True, probability=False, tol=0.001, cache_size=200, 
 		class_weight=None, verbose=False, max_iter=-1, random_state=None)
 	clf.fit(z, y) 
-	# 84.6547144754%
-
 ##################################################################################
+#################################################################################
 
 	fileMatrix = np.loadtxt(dataFile, dtype = 'S26', delimiter = ", ")
 	x2 = np.delete(fileMatrix,((fileMatrix.shape)[1] -1), 1)
@@ -144,6 +144,7 @@ def processDataSet(dataFile):
 	print 'Correctly predicted ' + str(k) + ' out of: ' + str(len(y2))
 	print 'Accuracy: ' + str(100*acc) + '%'
 
+	#print(clf.score(z2,y2))
 
 	return predictions
 	# k = 0

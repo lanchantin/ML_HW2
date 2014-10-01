@@ -43,7 +43,10 @@ def cv(x,y):
 	lowLoss = 0
 	bestL = 0
 
+	lossArr = []
+	lArr = []
 	for L in drange(0.02,1.02,0.02):
+		lArr.append(L)
 		loss = 0
 		NUMFOLDS = 10
 		for fold in range(0,NUMFOLDS):
@@ -71,6 +74,7 @@ def cv(x,y):
 		loss = loss/10
 		#print "L: " + str(L) + ", loss:  " + str(loss)
 		print loss
+		lossArr.append(loss)
 		if (L == 0.02):
 			lowLoss = loss
 			bestL = L
@@ -79,21 +83,28 @@ def cv(x,y):
 				lowLoss = loss
 				bestL = L
 
-
+	plt.plot(lArr,lossArr)
+	plt.show()
 	return bestL
 
 
 def run():
 	x,y = loadDataSet('RRdata.txt')
 	betaLR = ridgeRegress(x,y,0)
-	# fig = plt.figure()
-	# ax = fig.add_subplot(111, projection='3d')
-	# X, Y = np.meshgrid(x[:,1], x[:,2])
-	# Z = np.dot(x,betaLR)
-	# ax.plot_surface(X, Y, Z)
-	# plt.show()
 
+	fig = plt.figure()
+	ax = fig.add_subplot(111, projection='3d')
+	X, Y = np.meshgrid(x[:,1], x[:,2])
+	Z = np.dot(x,betaLR)
+	ax.plot_surface(X, Y, Z)
+	plt.show()
 
 	lambdaBest = cv(x,y)
 	betaRR = ridgeRegress(x,y,lambdaBest)
+
+	fig = plt.figure()
+	ax = fig.add_subplot(111, projection='3d')
+	Z = np.dot(x,betaRR)
+	ax.plot_surface(X, Y, Z)
+	plt.show()
 	return lambdaBest,betaRR
