@@ -28,14 +28,20 @@ def drange(start, stop, step):
 		yield r
 		r += step
 
-def cv(x,y):
+def cv(xIN,yIN):
 	# y = []
 	# for i in range(0,len(yIn)):
 	# 	y.append(yIn[i])
+	xTemp = xIN.tolist()
+	yTemp = yIN.tolist()
+	x = xTemp[:]
+	y = yTemp[:]
 	random.seed(37)
 	random.shuffle(x)
 	random.shuffle(y)
 
+	x = np.asarray(x)
+	y = np.asarray(y)
 	print x
 	print y
 
