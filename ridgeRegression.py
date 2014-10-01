@@ -28,7 +28,7 @@ def drange(start, stop, step):
 		yield r
 		r += step
 
-def cv(x,y):
+def cv(x,yIn):
 	foldElements = len(x)/10
 	lowLoss = 0
 	bestL = 0
@@ -36,7 +36,11 @@ def cv(x,y):
 	SEED = 37
 	random.seed(SEED)
 	random.shuffle(x)
+	y = []
+	for i in range(0,len(yIn)):
+		y.append(yIn[i])
 	random.shuffle(y)
+	print x
 
 
 	for L in drange(0.02,1.02,0.02):
@@ -50,7 +54,7 @@ def cv(x,y):
 			xTrain = np.concatenate((a,b),axis = 0)
 
 			a = y[0:currFold]
-			b = y[currFold+foldElements:y.shape[0]]
+			b = y[currFold+foldElements:len(y)]
 			yTrain = np.concatenate((a,b),axis = 0)
 
 			xTest = x[currFold:(currFold+foldElements)]
@@ -81,12 +85,12 @@ def cv(x,y):
 def run():
 	x,y = loadDataSet('RRdata.txt')
 	betaLR = ridgeRegress(x,y,0)
-	fig = plt.figure()
-	ax = fig.add_subplot(111, projection='3d')
-	X, Y = np.meshgrid(x[:,1], x[:,2])
-	Z = np.dot(x,betaLR)
-	ax.plot_surface(X, Y, Z)
-	plt.show()
+	# fig = plt.figure()
+	# ax = fig.add_subplot(111, projection='3d')
+	# X, Y = np.meshgrid(x[:,1], x[:,2])
+	# Z = np.dot(x,betaLR)
+	# ax.plot_surface(X, Y, Z)
+	# plt.show()
 
 
 	lambdaBest = cv(x,y)
