@@ -28,20 +28,20 @@ def drange(start, stop, step):
 		yield r
 		r += step
 
-def cv(x,yIn):
+def cv(x,y):
+	# y = []
+	# for i in range(0,len(yIn)):
+	# 	y.append(yIn[i])
+	random.seed(37)
+	random.shuffle(x)
+	random.shuffle(y)
+
+	print x
+	print y
+
 	foldElements = len(x)/10
 	lowLoss = 0
 	bestL = 0
-
-	SEED = 37
-	random.seed(SEED)
-	random.shuffle(x)
-	y = []
-	for i in range(0,len(yIn)):
-		y.append(yIn[i])
-	random.shuffle(y)
-	print x
-
 
 	for L in drange(0.02,1.02,0.02):
 		loss = 0
@@ -78,6 +78,7 @@ def cv(x,yIn):
 			if loss < lowLoss:
 				lowLoss = loss
 				bestL = L
+
 
 	return bestL
 
