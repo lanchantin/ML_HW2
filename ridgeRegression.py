@@ -89,8 +89,8 @@ def cv(xIN,yIN):
 				lowLoss = loss
 				bestL = L
 
-	plt.plot(lArr,lossArr)
-	plt.show()
+	#plt.plot(lArr,lossArr)
+	#plt.show()
 	return bestL
 
 
@@ -103,6 +103,7 @@ def run():
 	X, Y = np.meshgrid(x[:,1], x[:,2])
 	Z = np.dot(x,betaLR)
 	ax.plot_surface(X, Y, Z)
+	ax.scatter(x[:,1], x[:,2],y, color='g')
 	plt.show()
 
 	lambdaBest = cv(x,y)
@@ -110,9 +111,12 @@ def run():
 
 	fig2 = plt.figure()
 	ax2 = fig2.add_subplot(111, projection='3d')
-	Z = np.dot(x,betaRR)
-	ax2.plot_surface(X, Y, Z)
+	Z2 = np.dot(x,betaRR)
+	ax2.plot_surface(X, Y, Z2)
+	ax2.scatter(x[:,1], x[:,2],y, color='g')
 	plt.show()
+
+
+	betaCorr = ridgeRegress(x[:,1], x[:,2],lambdaBest)
 	return lambdaBest,betaRR
 
-	#PLOT THE DATA POINTS
