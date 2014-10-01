@@ -108,9 +108,11 @@ def run():
 	lambdaBest = cv(x,y)
 	betaRR = ridgeRegress(x,y,lambdaBest)
 
-	fig = plt.figure()
-	ax = fig.add_subplot(111, projection='3d')
+	fig2 = plt.figure()
+	ax2 = fig2.add_subplot(111, projection='3d')
 	Z = np.dot(x,betaRR)
-	ax.plot_surface(X, Y, Z)
+	ax2.plot_surface(X, Y, Z)
 	plt.show()
 	return lambdaBest,betaRR
+
+	#PLOT THE DATA POINTS
