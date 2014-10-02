@@ -6,7 +6,6 @@ import random
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-dataFile = 'RRdata.txt'
 
 
 def loadDataSet(dataFile):
@@ -42,8 +41,6 @@ def cv(xIN,yIN):
 
 	x = np.asarray(x)
 	y = np.asarray(y)
-	print x
-	print y
 
 	foldElements = len(x)/10
 	lowLoss = 0
@@ -78,8 +75,7 @@ def cv(xIN,yIN):
 				#print loss
 
 		loss = loss/10
-		#print "L: " + str(L) + ", loss:  " + str(loss)
-		print loss
+		#print loss
 		lossArr.append(loss)
 		if (L == 0.02):
 			lowLoss = loss
@@ -113,7 +109,7 @@ def run():
 	ax2 = fig2.add_subplot(111, projection='3d')
 	Z2 = np.dot(x,betaRR)
 	ax2.plot_surface(X, Y, Z2)
-	ax2.scatter(x[:,1], x[:,2],y, color='g')
+	ax2.scatter(x[:,1],x[:,2],y, color='g')
 	plt.show()
 
 
