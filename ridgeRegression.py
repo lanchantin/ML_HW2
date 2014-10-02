@@ -93,12 +93,12 @@ def cv(xIN,yIN):
 def run():
 	x,y = loadDataSet('RRdata.txt')
 	betaLR = ridgeRegress(x,y,0)
-
 	fig = plt.figure()
-	ax = fig.add_subplot(111, projection='3d')
-	X, Y = np.meshgrid(x[:,1], x[:,2])
+	ax = Axes3D(fig)
+	X, Y = np.meshgrid(x[:,1].tolist(), x[:,2].tolist())
 	Z = np.dot(x,betaLR)
 	ax.plot_surface(X, Y, Z)
+
 	ax.scatter(x[:,1], x[:,2],y, color='g')
 	plt.show()
 
@@ -106,13 +106,11 @@ def run():
 	betaRR = ridgeRegress(x,y,lambdaBest)
 
 	fig2 = plt.figure()
-	ax2 = fig2.add_subplot(111, projection='3d')
+	ax2 = Axes3D(fig2)
 	Z2 = np.dot(x,betaRR)
 	ax2.plot_surface(X, Y, Z2)
-	ax2.scatter(x[:,1],x[:,2],y, color='g')
+	ax2.scatter(x[:,1],x[:,2],y, color='m')
 	plt.show()
-
 
 	betaCorr = ridgeRegress(x[:,1], x[:,2],lambdaBest)
 	return lambdaBest,betaRR
-
