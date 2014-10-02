@@ -4,8 +4,9 @@ import numpy as np
 import matplotlib.pyplot as pl
 from sklearn.svm import SVC
 from sklearn import preprocessing
-from sklearn.preprocessing import OneHotEncoder
 dataFile = 'adult.test'
+
+
 
 workclass = ['Private', 'Self-emp-not-inc', 'Self-emp-inc', 'Federal-gov', 'Local-gov', 'State-gov', 'Without-pay', 'Never-worked']
 education =  ['Bachelors', 'Some-college', '11th', 'HS-grad', 'Prof-school', 'Assoc-acdm', 'Assoc-voc', '9th', '7th-8th', '12th', 'Masters', '1st-4th', '10th', 'Doctorate', '5th-6th', 'Preschool']
@@ -83,10 +84,23 @@ def processDataSet(dataFile):
 #################################################################################
 #################################################################################
 	print 'training SVM...'
-	clf = SVC(C=1, kernel='poly', degree=3, gamma=0.0, 
+	clf = SVC(C=50, kernel='poly', degree=2, gamma=0.0, 
 		coef0=0.0, shrinking=True, probability=False, tol=0.001, cache_size=200, 
 		class_weight=None, verbose=False, max_iter=-1, random_state=None)
 	clf.fit(z, y) 
+
+	# C = 1, kernel = poly, degree = 3 --> 78.2669322709%
+	# C = 50, kernel = poly, degree = 2 --> 76.1354581673%  
+	# C = 50, kernel = poly, degree = 3 --> 84.5816733068%
+	# C = 100, kernel = poly, degree = 3 --> 84.8605577689%
+
+	# C = 1, kernel = rbf, degree = 3 --> 84.7343957503%
+	# C = 50, kernel = rbf, degree = 3 --> 85.2988047809%
+	# C = 100, kernel = rbf, degree = 3 --> 
+
+	# C = 1, kernel = linear, degree = 3 --> 84.6414342629%
+
+
 ##################################################################################
 #################################################################################
 
