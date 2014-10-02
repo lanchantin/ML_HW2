@@ -84,10 +84,12 @@ def processDataSet(dataFile):
 #################################################################################
 #################################################################################
 	print 'training SVM...'
-	clf = SVC(C=50, kernel='poly', degree=2, gamma=0.0, 
+	clf = SVC(C=75, kernel='poly', degree=3, gamma=0.0, 
 		coef0=0.0, shrinking=True, probability=False, tol=0.001, cache_size=200, 
 		class_weight=None, verbose=False, max_iter=-1, random_state=None)
 	clf.fit(z, y) 
+
+	# C = 1, kernel = linear, degree = 3 --> 84.6414342629%
 
 	# C = 1, kernel = poly, degree = 3 --> 78.2669322709%
 	# C = 50, kernel = poly, degree = 2 --> 76.1354581673%  
@@ -98,8 +100,9 @@ def processDataSet(dataFile):
 	# C = 50, kernel = rbf, degree = 3 --> 85.2988047809%
 	# C = 100, kernel = rbf, degree = 3 --> 
 
-	# C = 1, kernel = linear, degree = 3 --> 84.6414342629%
+	# C = 1, kernel = sigmoid, degree = 3 --> 
 
+	
 
 ##################################################################################
 #################################################################################
@@ -133,7 +136,6 @@ def processDataSet(dataFile):
 		z2[i,63] = x2[i,12]
 		z2[i,nativeCountry.index(x2[i,13])+64] = 1
 
-
 	z2[:,0] = scaler1.transform(z2[:,0])                               
 	z2[:,9] = scaler2.transform(z2[:,9])      
 	z2[:,26] = scaler3.transform(z2[:,26]) 
@@ -141,9 +143,22 @@ def processDataSet(dataFile):
 	z2[:,62] = scaler5.transform(z2[:,62])  
 	z2[:,63] = scaler6.transform(z2[:,63]) 
 
+
+##################################################################################
+
 	print 'testing SVM...'
 	predictions = []
-	k = 0
+
+
+	k1 = 0
+	for i in range(0,y.shape[0]):
+		if (clf.predict(z[i]) == y[i]):
+			k1 = k1+1
+	acc1 = float(k1)/float(len(y))
+
+
+
+	k2 = 0
 	for i in range(0,y2.shape[0]):
 		if (clf.predict(z2[i]) == '1'):
 			predictions.append('>50K')
@@ -151,89 +166,15 @@ def processDataSet(dataFile):
 			predictions.append('<=50K')
 
 		if (clf.predict(z2[i]) == y2[i]):
-			k = k+1
+			k2 = k2+1
+	acc2 = float(k2)/float(len(y2))
 
-	length = len(y2)
-	acc = float(k)/float(length)
-	print 'Correctly predicted ' + str(k) + ' out of: ' + str(len(y2))
-	print 'Accuracy: ' + str(100*acc) + '%'
+	print 'Correctly predicted ' + str(k1) + ' out of: ' + str(len(y)) + ' test samples'
+	print 'Train Accuracy: ' + str(100*acc1) + '%'
+	print 'Correctly predicted ' + str(k2) + ' out of: ' + str(len(y2)) +' train samples'
+	print 'Accuracy: ' + str(100*acc2) + '%'
 
-	#print(clf.score(z2,y2))
+	# print 'Test Accuracy: ' + str(100*(clf.score(z,y))) + '%'
+	# print 'Train Accuracy: ' + str(100*(clf.score(z2,y2))) + '%'
 
 	return predictions
-	# k = 0
-	# for i in range(0,y.shape[0]):
-	# 	if (clf.predict(z[i]) == y[i]):
-	# 		k = k+1
-	# print k
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# enc = OneHotEncoder(n_values='auto', categorical_features=[1,3,5,6,7,8,9,13], dtype=<type 'str'>, sparse=True)
-# len(workclass) + len(education) + len(maritalStatus) + len(occupation) + len(relationship) + len(race) + len(sex) + len(nativeCountry) =  99
-# for i in range(0,x.shape[0]):
-# 	x[i,0] = int(x[i,0])
-# 	x[i,1] = int(workclass.index(x[i,1]))
-# 	x[i,2] = int(x[i,2])
-# 	x[i,3] = int(education.index(x[i,3]))
-# 	x[i,4] = int(x[i,4])
-# 	x[i,5] = int(maritalStatus.index(x[i,5]))
-# 	x[i,6] = int(occupation.index(x[i,6]))
-# 	x[i,7] = int(relationship.index(x[i,7]))
-# 	x[i,8] = int(race.index(x[i,8]))
-# 	x[i,9] = int(sex.index(x[i,9]))
-# 	x[i,10] = int(x[i,10])
-# 	x[i,11] = int(x[i,11])
-# 	x[i,12] = int(x[i,12])
-# 	x[i,13] = int(nativeCountry.index(x[i,13]))
-
-
-
-#0 0age: continuous.
-#1 1-8workclass = ['Private', 'Self-emp-not-inc', 'Self-emp-inc', 'Federal-gov', 'Local-gov', 'State-gov', 'Without-pay', 'Never-worked']
-#2 9fnlwgt: continuous. 
-#3 10-25-education =  ['Bachelors', 'Some-college', '11th', 'HS-grad', 'Prof-school', 'Assoc-acdm', 'Assoc-voc', '9th', '7th-8th', '12th', 'Masters', '1st-4th', '10th', 'Doctorate', '5th-6th', 'Preschool']
-#4 26education-num: continuous. 
-#5 27-33maritalStatus = ['Married-civ-spouse', 'Divorced', 'Never-married', 'Separated', 'Widowed', 'Married-spouse-absent', 'Married-AF-spouse']
-#6 34-47occupation = ['Tech-support', 'Craft-repair', 'Other-service', 'Sales', 'Exec-managerial', 'Prof-specialty', 'Handlers-cleaners', 'Machine-op-inspct', 'Adm-clerical', 'Farming-fishing', 'Transport-moving', 'Priv-house-serv', 'Protective-serv', 'Armed-Forces'] 
-#7 48-52relationship = ['Wife', 'Own-child', 'Husband', 'Not-in-family', 'Other-relative', 'Unmarried'] 
-#8 53-57race = ['White', 'Asian-Pac-Islander', 'Amer-Indian-Eskimo', 'Other', 'Black']
-#9 58sex = ['Female', 'Male'] 
-#10 59capital-gain: continuous. 
-#11 60capital-loss: continuous. 
-#12 61hours-per-week: continuous. 
-#13 62-102nativeCountry = ['United-States', 'Cambodia', 'England', 'Puerto-Rico', 'Canada', 'Germany', 'Outlying-US(Guam-USVI-etc)', 'India', 'Japan', 'Greece', 'South', 'China', 'Cuba', 'Iran', 'Honduras', 'Philippines', 'Italy', 'Poland', 'Jamaica', 'Vietnam', 'Mexico', 'Portugal', 'Ireland', 'France', 'Dominican-Republic', 'Laos', 'Ecuador', 'Taiwan', 'Haiti', 'Columbia', 'Hungary', 'Guatemala', 'Nicaragua', 'Scotland', 'Thailand', 'Yugoslavia', 'El-Salvador', 'Trinadad&Tobago', 'Peru', 'Hong', 'Holand-Netherlands']
-
-# for i in range(0,z.shape[0]):
-# 	z[i,0] = int(z[i,0])
-# 	z[i,1] = int(z[i,1])
-# 	z[i,2] = int(z[i,2])
-# 	z[i,3] = int(z[i,3])
-# 	z[i,4] = int(z[i,4])
-# 	z[i,5] = int(z[i,5])
-# 	z[i,6] = int(z[i,6])
-# 	z[i,7] = int(z[i,7])
-# 	z[i,8] = int(z[i,8])
-# 	z[i,9] = int(z[i,9])
-# 	z[i,10] = int(z[i,10])
-# 	z[i,11] = int(z[i,11])
-# 	z[i,12] = int(z[i,12])
-# 	z[i,13] = int(z[i,13])
