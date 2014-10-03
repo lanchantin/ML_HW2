@@ -43,10 +43,30 @@ CS 6501 HW2
 =$>$ Cannot be solved by linear regression because $X^TX$ is non-invertable\\
 
 \item[1.3]
-Lasso Regression should be used because it can generate a sparse $\beta$ vector\\
+Lasso Regression should be used because it can generate a sparse $\beta$ vector
+
+\item[1.4]
+See graphs at end of document
 
 \item[1.5]
 Ridge regression performs better on this data set. This is probably due to the fact that after running linear regression between $x_1$ and $x_2$, I found that $\theta$ $\approx$ 2. This means that the features are not linearly independent ($x_2$ $\approx$ 2$x_1$), and thus the $X^TX$ matrix is non invertable, so using $\lambda$I in the ridge regression to regularize the function makes it so that the $X^TX$ matrix is guaranteed to be invertable, resulting in a more accurate $\beta$.
+\\
+\item[2.3]
+Table of Kernels and Parameters\\\\
+\begin{tabular}{llllll}
+Kernel  & C   & Degree & Gamma & Test Accuracy & Train Accuracy \\
+linear  & 1   & 3      & 0     & 84.8683\%     & 84.6414\%      \\
+poly    & 1   & 3      & 0     & 78.0783\%     & 78.2669\%      \\
+poly    & 50  & 3      & 0     & 84.7457\%     & 84.5816\%      \\
+poly    & 50  & 4      & 0     & 82.3718\%     & 82.5099\%      \\
+poly    & 100 & 3      & 0     & 85.2595\%     & 84.8605\%      \\
+rbf     & 1   & 3      & 0     & 84.9976\%     & 84.7343\%      \\
+rbf     & 50  & 3      & 0     & 86.1381\%     & 85.2988\%      \\
+rbf     & 50  & 3      & 0.1   & 91.708\%      &                \\
+sigmoid & 50  &        &       &               &                \\
+        &     &        &       &               &               
+\end{tabular}
+
 
 \end{enumerate}
 \end{document}

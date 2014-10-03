@@ -84,25 +84,10 @@ def processDataSet(dataFile):
 #################################################################################
 #################################################################################
 	print 'training SVM...'
-	clf = SVC(C=75, kernel='poly', degree=3, gamma=0.0, 
+	clf = SVC(C=50, kernel='rbf', degree=3, gamma=.1, 
 		coef0=0.0, shrinking=True, probability=False, tol=0.001, cache_size=200, 
 		class_weight=None, verbose=False, max_iter=-1, random_state=None)
 	clf.fit(z, y) 
-
-	# C = 1, kernel = linear, degree = 3 --> 84.6414342629%
-
-	# C = 1, kernel = poly, degree = 3 --> 78.2669322709%
-	# C = 50, kernel = poly, degree = 2 --> 76.1354581673%  
-	# C = 50, kernel = poly, degree = 3 --> 84.5816733068%
-	# C = 100, kernel = poly, degree = 3 --> 84.8605577689%
-
-	# C = 1, kernel = rbf, degree = 3 --> 84.7343957503%
-	# C = 50, kernel = rbf, degree = 3 --> 85.2988047809%
-	# C = 100, kernel = rbf, degree = 3 --> 
-
-	# C = 1, kernel = sigmoid, degree = 3 --> 
-
-	
 
 ##################################################################################
 #################################################################################
@@ -172,7 +157,7 @@ def processDataSet(dataFile):
 	print 'Correctly predicted ' + str(k1) + ' out of: ' + str(len(y)) + ' test samples'
 	print 'Train Accuracy: ' + str(100*acc1) + '%'
 	print 'Correctly predicted ' + str(k2) + ' out of: ' + str(len(y2)) +' train samples'
-	print 'Accuracy: ' + str(100*acc2) + '%'
+	print 'Test Accuracy: ' + str(100*acc2) + '%'
 
 	# print 'Test Accuracy: ' + str(100*(clf.score(z,y))) + '%'
 	# print 'Train Accuracy: ' + str(100*(clf.score(z2,y2))) + '%'
