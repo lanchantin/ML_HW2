@@ -1,9 +1,0 @@
-#!/bin/bash
-clear
-FILES = /if24/jjl5sw/Downloads/HW1 Fork_exec
-for f in $FILES
-do
-  echo "Processing $f file..."
-  # take action on each file. $f store current file name
-  # cat $f
-done

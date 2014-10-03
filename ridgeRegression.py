@@ -67,7 +67,7 @@ def cv(xIN,yIN):
 			y_hat = np.dot(xTest,Bk)
 
 			for j in range(0,len(yTest)):
-				loss = loss + math.pow((yTest[j] - y_hat[j]),2)
+				loss = loss + math.sqrt(math.pow((yTest[j] - y_hat[j]),2))
 				#print loss
 
 		loss = loss/10
@@ -81,8 +81,10 @@ def cv(xIN,yIN):
 				lowLoss = loss
 				bestL = L
 
-	#plt.plot(lArr,lossArr)
-	#plt.show()
+	# plt.plot(lArr,lossArr)
+	# plt.xlabel(r'$\lambda$')
+	# plt.ylabel(r'J($\theta$)')
+	# plt.show()
 	return bestL
 
 
