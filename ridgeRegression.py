@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 
-
 def loadDataSet(dataFile):
 	xVal = np.loadtxt(dataFile, delimiter = " ", usecols=(0,1,2))
 	yVal = np.loadtxt(dataFile, delimiter = " ", usecols=(3,))
@@ -28,9 +27,6 @@ def drange(start, stop, step):
 		r += step
 
 def cv(xIN,yIN):
-	# y = []
-	# for i in range(0,len(yIn)):
-	# 	y.append(yIn[i])
 	xTemp = xIN.tolist()
 	yTemp = yIN.tolist()
 	x = xTemp[:]
@@ -90,16 +86,16 @@ def cv(xIN,yIN):
 	return bestL
 
 
-def run():
+def test():
 	x,y = loadDataSet('RRdata.txt')
 	betaLR = ridgeRegress(x,y,0)
 	fig = plt.figure()
 	ax = Axes3D(fig)
-	X, Y = np.meshgrid(x[:,1].tolist(), x[:,2].tolist())
+	ax.scatter(x[:,1], x[:,2],y, color='g')
+	X, Y = np.meshgrid(x[:,1], x[:,2])
 	Z = np.dot(x,betaLR)
 	ax.plot_surface(X, Y, Z)
 
-	ax.scatter(x[:,1], x[:,2],y, color='g')
 	plt.show()
 
 	lambdaBest = cv(x,y)
