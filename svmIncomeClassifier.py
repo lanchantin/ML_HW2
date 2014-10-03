@@ -84,7 +84,7 @@ def processDataSet(dataFile):
 #################################################################################
 #################################################################################
 	print 'training SVM...'
-	clf = SVC(C=50, kernel='rbf', degree=3, gamma=.1, 
+	clf = SVC(C=1, kernel='rbf', degree=3, gamma=0, 
 		coef0=0.0, shrinking=True, probability=False, tol=0.001, cache_size=200, 
 		class_weight=None, verbose=False, max_iter=-1, random_state=None)
 	clf.fit(z, y) 
