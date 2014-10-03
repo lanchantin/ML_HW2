@@ -4,7 +4,6 @@ import numpy as np
 import matplotlib.pyplot as pl
 from sklearn.svm import SVC
 from sklearn import preprocessing
-dataFile = 'adult.test'
 
 
 
